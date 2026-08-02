@@ -10,7 +10,7 @@ const WORKBENCH = [
     topic: "Procrastination",
     method: "Journal",
     direction: "Secret society",
-    sparked: "The Order of Later",
+    sparked: "Procrastination Station",
     details: "A social journal/forum where people cheer on each other's procrastination — a Wall of Shame for recently completed tasks, and a Wall of Fame for the greatest procrastinators."
   },
   {
@@ -25,15 +25,7 @@ const WORKBENCH = [
     method: "Chatbot",
     direction: "Make it passive-aggressive",
     sparked: "Pissy Password Bot",
-    details: "A password-strength checker that judges you personally for every weak password you try to sneak past it."
-    // placeholder combo — replace with the real topic/method/direction
-  },
-  {
-    topic: "Superstitions",
-    method: "Fortune teller",
-    direction: "Make it feel like a government program",
-    sparked: "Good Luck Ramses",
-    details: "A bureaucratic, form-based fortune teller — file a request, wait in a queue, receive an official ruling on your luck."
+    details: "A password-strength checker that is never in the mood to help you with your passwords."
     // placeholder combo — replace with the real topic/method/direction
   },
   {
