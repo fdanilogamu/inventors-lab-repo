@@ -11,7 +11,7 @@ const WORKBENCH = [
     method: "Journal",
     direction: "Secret society",
     sparked: "Procrastination Station",
-    details: "A social journal/forum where people cheer on each other's procrastination — a Wall of Shame for recently completed tasks, and a Wall of Fame for the greatest procrastinators."
+    details: "A social journal/forum where people cheer on each other's procrastination...a Wall of Shame for recently completed tasks, and a Wall of Fame for the greatest procrastinators."
   },
   {
     topic: "Nostalgia",
@@ -33,7 +33,7 @@ const WORKBENCH = [
     method: "Video game",
     direction: "Make it competitive",
     sparked: "Gamified Triage",
-    details: "Turns the hospital waiting room into a leaderboard — points, ranks, and a scoreboard for who gets seen next and why."
+    details: "Turns the hospital waiting room into a leaderboard. It has points, ranks, and a scoreboard for who gets seen next and why."
     // placeholder combo — replace with the real topic/method/direction
   }
 ];
