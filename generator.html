@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Give Me Something To Make — The Inventor's Lab</title>
+<style>
+
+  /* ============================================================
+     LAB NAV — matches assets/css/site.css on the rest of the site
+     ============================================================ */
+  .labnav{
+    border-bottom: 1px solid #2A2D4A;
+    margin-bottom: 30px;
+  }
+  .labnav-inner{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 18px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .labnav-mark{
+    font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    text-decoration: none;
+    color: #FFF8E7;
+    white-space: nowrap;
+  }
+  .labnav-mark span{ color: #FFC145; }
+  .labnav-links{
+    display:flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .labnav-links a{
+    text-decoration:none;
+    color: #FFF8E7;
+    opacity: 0.65;
+    padding-bottom: 3px;
+    border-bottom: 1px solid transparent;
+  }
+  .labnav-links a:hover{ opacity: 1; }
+  .labnav-links a.current{ opacity: 1; border-bottom-color: #FFC145; }
+  .labnav-links a.ext::after{ content: " ↗"; opacity: 0.6; }
+
+  /* ============================================================
+     TOKENS
+     ============================================================ */
+  :root{
+    --ink: #14162B;
+    --ink-soft: #2A2D4A;
+    --paper: #FFF8E7;
+    --paper-line: #E7DCC0;
+    --topic: #FF6B5B;
+    --topic-ink: #5C1A10;
+    --method: #2EC4B6;
+    --method-ink: #063632;
+    --direction: #FFC145;
+    --direction-ink: #4A3200;
+    --pin: #F5F1E6;
+    --shadow: rgba(20,22,43,0.45);
+    --radius: 14px;
+    --font-display: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "Courier New", Courier, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  body{
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255,107,91,0.10), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(46,196,182,0.10), transparent 40%);
+    padding: 32px 18px 80px;
+  }
+
+  .wrap{
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  header{
+    text-align:center;
+    margin-bottom: 36px;
+  }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--paper-line);
+    opacity: 0.7;
+    margin: 0 0 10px;
+  }
+
+  h1{
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(28px, 5vw, 44px);
+    letter-spacing: -0.5px;
+    margin: 0;
+    line-height: 1.05;
+  }
+
+  h1 span{
+    display:inline-block;
+    transform: rotate(-2deg);
+    color: var(--direction);
+  }
+
+  /* ============================================================
+     MACHINE / CARDS
+     ============================================================ */
+  .machine{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 22px;
+    margin: 0 auto 30px;
+  }
+
+  .slot{
+    width: 240px;
+    max-width: 100%;
+  }
+
+  .card{
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding: 26px 18px 22px;
+    min-height: 170px;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    box-shadow: 0 14px 0 -6px var(--shadow), 0 18px 24px -10px var(--shadow);
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform 0.15s ease;
+  }
+
+  .slot:nth-child(1) .card{ --tilt: -2.5deg; }
+  .slot:nth-child(2) .card{ --tilt: 1.5deg; }
+  .slot:nth-child(3) .card{ --tilt: -1deg; }
+
+  .card::before{
+    /* perforated ticket edge */
+    content: "";
+    position:absolute;
+    top: 0; left: 14px; right: 14px;
+    height: 1px;
+    background-image: repeating-linear-gradient(to right, var(--paper-line) 0 6px, transparent 6px 12px);
+    top: 46px;
+  }
+
+  .card .pin{
+    position:absolute;
+    top: -9px; left: 50%;
+    transform: translateX(-50%) rotate(8deg);
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--pin);
+    box-shadow: inset 0 -2px 3px rgba(0,0,0,0.25), 0 3px 4px rgba(0,0,0,0.4);
+  }
+
+  .card.pinned{
+    box-shadow: 0 0 0 3px var(--direction), 0 14px 0 -6px var(--shadow), 0 18px 24px -10px var(--shadow);
+  }
+
+  .pin-toggle{
+    position:absolute;
+    top: 10px; right: 10px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor: pointer;
+    opacity: 0.55;
+    transition: opacity 0.12s ease, background 0.12s ease, transform 0.12s ease;
+  }
+  .pin-toggle:hover{ opacity: 1; }
+  .pin-toggle:active{ transform: scale(0.9); }
+  .pin-toggle.active{
+    background: var(--direction);
+    border-color: var(--direction);
+    opacity: 1;
+  }
+  .pin-toggle:disabled{
+    cursor: default;
+    opacity: 0.15;
+  }
+  .pin-toggle:disabled:hover{ opacity: 0.15; }
+
+  .card-label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+
+  .slot[data-cat="topic"] .card-label{ background: var(--topic); color: var(--topic-ink); }
+  .slot[data-cat="method"] .card-label{ background: var(--method); color: var(--method-ink); }
+  .slot[data-cat="direction"] .card-label{ background: var(--direction); color: var(--direction-ink); }
+
+  .card-value{
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(18px, 3.4vw, 22px);
+    line-height: 1.15;
+    text-transform: uppercase;
+    letter-spacing: -0.3px;
+    min-height: 1.2em;
+  }
+
+  .card-value.placeholder{
+    font-family: var(--font-body);
+    font-weight: 400;
+    text-transform: none;
+    font-size: 14px;
+    color: #9a8f6f;
+    letter-spacing: 0;
+  }
+
+  .reroll-one{
+    margin-top: 14px;
+    background: none;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease;
+  }
+  .reroll-one:hover{ background: var(--ink); color: var(--paper); }
+  .reroll-one:active{ transform: scale(0.94); }
+  .reroll-one:disabled{ opacity: 0.35; cursor: default; background:none; color:var(--ink); }
+
+  .plus{
+    align-self:center;
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--paper-line);
+    opacity: 0.5;
+    padding-top: 40px;
+  }
+
+  /* card flip animation */
+  @keyframes flipReveal{
+    0%   { transform: rotateX(90deg) rotate(var(--tilt,0deg)); opacity: 0.2; }
+    60%  { transform: rotateX(-10deg) rotate(var(--tilt,0deg)); opacity: 1; }
+    100% { transform: rotateX(0deg) rotate(var(--tilt,0deg)); opacity: 1; }
+  }
+  .card.flipping{ animation: flipReveal 0.42s ease; }
+
+  /* ============================================================
+     ACTIONS
+     ============================================================ */
+  .actions{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 14px;
+    margin-bottom: 44px;
+  }
+
+  .btn-primary{
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--direction);
+    color: var(--direction-ink);
+    border: none;
+    padding: 16px 34px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #b8871f, 0 10px 18px rgba(0,0,0,0.35);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .btn-primary:hover{ transform: translateY(-2px); }
+  .btn-primary:active{ transform: translateY(2px); box-shadow: 0 3px 0 #b8871f; }
+
+  .btn-secondary{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid var(--ink-soft);
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .btn-secondary:hover{ background: var(--ink-soft); }
+  .btn-secondary:disabled{ opacity: 0.35; cursor: default; }
+  .btn-secondary:disabled:hover{ background: transparent; }
+
+  /* ============================================================
+     COLLAPSIBLE PANELS
+     ============================================================ */
+  details{
+    background: var(--ink-soft);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    overflow:hidden;
+  }
+  details summary{
+    cursor:pointer;
+    padding: 14px 18px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    list-style: none;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+  details summary::-webkit-details-marker{ display:none; }
+  details summary::after{
+    content: "+";
+    font-family: var(--font-display);
+    font-size: 16px;
+  }
+  details[open] summary::after{ content: "–"; }
+  .panel-body{
+    padding: 4px 18px 20px;
+  }
+
+  /* history */
+  .history-list{
+    list-style:none;
+    margin:0; padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .history-item{
+    background: rgba(255,248,231,0.06);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap: 10px;
+    cursor:pointer;
+  }
+  .history-item:hover{ background: rgba(255,248,231,0.13); }
+  .history-item .combo{ opacity: 0.9; }
+  .history-item .combo b{ color: var(--direction); font-weight: 700; }
+  .history-empty{ opacity:0.5; font-size:13px; font-style: italic; }
+
+  /* customize */
+  .cat-columns{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .cat-col h4{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 10px 0 8px;
+    opacity: 0.75;
+  }
+  .add-row{
+    display:flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .add-row input{
+    flex:1;
+    min-width: 0;
+    background: rgba(255,248,231,0.08);
+    border: 1px solid var(--ink-soft);
+    color: var(--paper);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  .add-row input::placeholder{ color: rgba(255,248,231,0.4); }
+  .add-row button{
+    background: var(--method);
+    color: var(--method-ink);
+    border:none;
+    border-radius: 8px;
+    padding: 0 14px;
+    font-weight: 700;
+    cursor:pointer;
+    font-size: 16px;
+  }
+  .chip-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    min-height: 24px;
+  }
+  .chip{
+    background: rgba(255,248,231,0.1);
+    border-radius: 999px;
+    padding: 4px 6px 4px 12px;
+    font-size: 12px;
+    display:flex;
+    align-items:center;
+    gap: 6px;
+  }
+  .chip button{
+    background:none;
+    border:none;
+    color: var(--paper);
+    opacity: 0.6;
+    cursor:pointer;
+    font-size: 13px;
+    line-height:1;
+    padding: 2px 4px;
+  }
+  .chip button:hover{ opacity:1; color: var(--topic); }
+  .chip-empty{ font-size:12px; opacity:0.4; font-style:italic; }
+
+  .builtin-list{
+    max-height: 160px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap: 4px;
+    font-size: 13px;
+    padding-right: 4px;
+  }
+  .builtin-list label{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    opacity: 0.85;
+  }
+  .builtin-list input[type="checkbox"]{ accent-color: var(--method); }
+
+  .reset-row{
+    margin-top: 10px;
+    display:flex;
+    gap: 8px;
+    flex-wrap:wrap;
+  }
+  .reset-row button{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background:none;
+    border: 1px solid var(--ink-soft);
+    color: var(--paper);
+    opacity: 0.7;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor:pointer;
+  }
+  .reset-row button:hover{ opacity:1; }
+
+  footer{
+    text-align:center;
+    font-size: 11px;
+    opacity: 0.35;
+    font-family: var(--font-mono);
+    margin-top: 30px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card.flipping{ animation: none; }
+    .btn-primary, .btn-primary:hover, .btn-primary:active{ transform:none; }
+  }
+
+</style>
+</head>
+<body>
+
+<nav class="labnav">
+  <div class="labnav-inner">
+    <a class="labnav-mark" href="index.html">THE INVENTOR'S <span>LAB</span></a>
+    <div class="labnav-links">
+      <a href="index.html">Lab</a>
+      <a href="workbench.html">Workbench</a>
+      <a href="builders-corner.html">Builder's Corner</a>
+      <a href="https://your-substack-url.substack.com" class="ext" target="_blank" rel="noopener">Lab Notes</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">a small machine for making things</p>
+    <h1>Give Me Something <span>To Make</span></h1>
+  </header>
+
+  <div class="machine" id="machine">
+    <div class="slot" data-cat="topic">
+      <div class="card" id="card-topic">
+        <div class="pin"></div>
+        <button class="pin-toggle" id="pin-topic" disabled aria-label="Pin topic" title="Pin this card">📌</button>
+        <div class="card-label">Topic</div>
+        <div class="card-value placeholder" id="value-topic">???</div>
+      </div>
+      <button class="reroll-one" id="reroll-topic" disabled>reroll topic</button>
+    </div>
+
+    <div class="slot" data-cat="method">
+      <div class="card" id="card-method">
+        <div class="pin"></div>
+        <button class="pin-toggle" id="pin-method" disabled aria-label="Pin method" title="Pin this card">📌</button>
+        <div class="card-label">Method</div>
+        <div class="card-value placeholder" id="value-method">???</div>
+      </div>
+      <button class="reroll-one" id="reroll-method" disabled>reroll method</button>
+    </div>
+
+    <div class="slot" data-cat="direction">
+      <div class="card" id="card-direction">
+        <div class="pin"></div>
+        <button class="pin-toggle" id="pin-direction" disabled aria-label="Pin direction" title="Pin this card">📌</button>
+        <div class="card-label">Direction</div>
+        <div class="card-value placeholder" id="value-direction">???</div>
+      </div>
+      <button class="reroll-one" id="reroll-direction" disabled>reroll direction</button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-primary" id="btn-main">Give Me Something To Make</button>
+    <button class="btn-secondary" id="btn-reroll-all" style="display:none;">reroll everything</button>
+  </div>
+
+  <details id="history-panel">
+    <summary>History</summary>
+    <div class="panel-body">
+      <ul class="history-list" id="history-list">
+        <li class="history-empty">Nothing yet. Your combinations will show up here.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details id="customize-panel">
+    <summary>Customize the lists</summary>
+    <div class="panel-body">
+      <div class="cat-columns" id="cat-columns"><!-- filled by JS --></div>
+    </div>
+  </details>
+
+  <footer>runs entirely in this browser tab &middot; nothing leaves your machine</footer>
+
+</div>
+
+<script>
+(function(){
+
+  /* ============================================================
+     DATA — separated from logic so it's easy to expand later.
+     ============================================================ */
+  const DATA = {
+    topic: [
+      "Hats","Soup","Pigeons","Traffic lights","Grandmothers","Jealousy","Houseplants",
+      "The DMV","Static electricity","Vending machines","Regret","Left socks","Thunderstorms",
+      "Group chats","Waiting rooms","Squirrels","Nostalgia","Parking lots","Elevators",
+      "Bread","Alarm clocks","First dates","Junk drawers","Loneliness","Airports",
+      "Passwords","Hiccups","Neighbors","Voicemail","Board games","Sourdough starters",
+      "Awkward silences","Umbrellas","Compost","Office chairs","Fireflies","Rumors",
+      "Instruction manuals","Doorbells","Procrastination","Recycling bins","Karaoke",
+      "Sea monsters","Grocery lists","Time zones","Houseflies","Family recipes",
+      "Escalators","Public bathrooms","Ghosts","Long car rides","Spreadsheets",
+      "Vending-machine snacks","Lost socks","Mirrors","Small talk","The last cookie",
+      "Moving day","Gym memberships","Wi-fi passwords","Overthinking","Silence",
+      "Backyard bugs","Receipts","Old photographs","Sneezing","Traffic jams",
+      "Snow days","Awkward hugs","Group projects","Deja vu","Motion sickness",
+      "Chain emails","Lava lamps","Speed bumps","The multiverse","Deja vu again",
+
+      "Keys","Coins","Balloons","Receipts","Curtains","Stairs","Hallways","Basements",
+      "Attics","Porches","Fences","Mailboxes","Shopping carts","Plastic bags","Tupperware",
+      "Leftovers","Pickles","Cereal","Coffee","Ice cubes","Toothpaste","Laundry",
+      "Dishes","Dust","Crumbs","Mold","Rain","Fog","Wind","Sunlight","Shadows",
+      "The moon","Stars","Volcanoes","Rivers","Islands","Deserts","Mountains","Caves",
+      "Beaches","Parks","Libraries","Museums","Hotels","Motels","Hospitals",
+      "Schools","Factories","Warehouses","Call centers","Construction sites",
+      "Train stations","Bus stops","Gas stations","Convenience stores","Restaurants",
+      "Bakeries","Barbershops","Dentists","Waiting lists","Appointments","Queues",
+      "Calendars","Deadlines","Birthdays","Anniversaries","Funerals","Holidays",
+      "Vacations","Commutes","Neighborhoods","Roommates","Coworkers","Strangers",
+      "Childhood","Adulthood","Retirement","First impressions","Second chances",
+      "Bad habits","Good intentions","Secrets","Promises","Excuses","Rumors",
+      "Guilt","Pride","Envy","Curiosity","Boredom","Confidence","Embarrassment",
+      "Miscommunication","Customer service","Bureaucracy","Traditions","Superstitions",
+      "Rules","Exceptions","Fine print","Passwords you forgot","Things nobody explains",
+      "Things people pretend to understand","The wrong answer","A very specific problem",
+      "An empty room","A locked door","A mysterious package","A missing person",
+      "A strange noise","A neighborhood legend","An abandoned building","A suspicious email",
+      "A badly designed button","A broken machine","A very long line","A tiny inconvenience",
+      "A huge inconvenience","A surprisingly useful object","Something that should be automated",
+      "Something that absolutely should not be automated","A family secret","A local celebrity",
+      "A fake expert","An amateur expert","A person who takes everything literally",
+      "A person who knows too much","A person who knows nothing","A very confident idiot",
+      "A very anxious genius","A creature nobody has seen","A creature everyone has seen",
+      "A problem from the future","A problem from the past","A problem nobody has noticed yet"
+    ],
+
+    method: [
+      "Website","JavaScript game","Mobile app","Physical product","Cookbook","Poster",
+      "Advertisement","Fictional company","Spreadsheet","Database","Comic","Short story",
+      "Children's book","Board game","Card game","Interface","Tool","Service",
+      "Social network","Browser extension","Instructional manual","Quiz","Generator",
+      "Calculator","Newsletter","Podcast","Packaging design","Menu","Museum exhibit",
+      "Flowchart","Choose-your-own-adventure","Zine","Puppet show","Infomercial",
+      "Escape room","Tarot deck","Ringtone","Perfume","Font","Holiday",
+      "Support group","Conspiracy theory","Diagram","Voicemail greeting","Cereal box",
+
+      "Video game","Text adventure","Arcade game","Puzzle","Party game","Dice game",
+      "Role-playing game","Simulation","Interactive fiction","Dating app","Messaging app",
+      "Dashboard","Digital assistant","Chatbot","AI tool","AI character","Browser toy",
+      "Desktop app","Command-line tool","Chrome extension","API","Online course",
+      "Workshop","Lecture","Classroom activity","Lesson plan","Curriculum","Field guide",
+      "Encyclopedia entry","Dictionary","Glossary","Reference card","Cheat sheet",
+      "Checklist","Decision tree","Assessment","Personality test","Survey","Interview",
+      "User manual","Repair manual","Recipe","Cocktail menu","Restaurant concept",
+      "Food truck","Pop-up shop","Retail store","Subscription service","Marketplace",
+      "Club","Membership program","Loyalty program","Contest","Competition",
+      "Reality show","Game show","Talk show","Documentary","Mockumentary","Commercial",
+      "Press release","Job posting","Dating profile","Personal ad","Obituary",
+      "Travel guide","Tourist attraction","Hotel","Theme park","Public service",
+      "Warning label","Product review","Customer support script","Sales pitch",
+      "Sales brochure","Business card","Invoice","Form","Application form","Contract",
+      "Policy document","Terms of service","Constitution","Rulebook","Manifesto",
+      "Field notebook","Research project","Experiment","Case study","Report",
+      "Magazine","Newspaper","Column","Advice column","Advice hotline","Advice bot",
+      "Diary","Journal","Memoir","Autobiography","Fairy tale","Myth","Fable",
+      "Folk song","Song","Music video","Album concept","Radio show","Sound effect",
+      "Dance","Choreography","Theater play","Monologue","Stand-up routine",
+      "Sketch comedy","Puppet theater","Magic trick","Illusion","Scavenger hunt",
+      "Treasure map","Map","Calendar","Planner","Habit tracker","Budgeting tool",
+      "Timer","Clock","Weather forecast","Fortune teller","Horoscope","Museum plaque",
+      "Monument","Public installation","Sculpture","Painting","Collage","Photobook",
+      "Logo","Brand identity","Mascot","Sticker pack","T-shirt","Costume",
+      "Toy","Doll","Action figure","Model","Miniature","Building","Room",
+      "Interior design","Garden","Recipe book","Gift","Care package","Ritual",
+      "Ceremony","Tradition","Holiday","Festival","Competition format","Internet meme"
+    ],
+
+    direction: [
+      "for children","for lonely people","make it unnecessarily complicated","make it luxurious",
+      "make it embarrassing","make it social","solve a stupid problem","turn it into a ritual",
+      "make it competitive","make it free","make it inconvenient on purpose","make it extremely simple",
+      "make it absurdly bureaucratic","make it feel like 2007","make it feel futuristic",
+      "make it addictive","make people collaborate","make people argue","make it physical",
+      "make it work without AI","make it work with AI","make it deliberately derivative",
+      "for people who can't sleep","make it overly formal","make it whisper-quiet",
+      "make it extremely loud","for pets","make it seasonal","make it a secret",
+      "make it a competition with yourself","make it feel illegal (it isn't)","for your past self",
+
+      "for your future self","for grandparents","for teenagers","for exhausted people",
+      "for people who hate meetings","for people who love rules","for people who hate rules",
+      "for someone who is terrible at technology","for an expert","for complete beginners",
+      "for people in a hurry","for people with too much time","for a very small audience",
+      "for everyone","make it absurdly specific","make it completely generic",
+      "make it impossible to explain","make it self-explanatory","make it mysterious",
+      "make the user figure it out","make the rules change halfway through",
+      "make the rules visible","hide the rules","make the wrong answer more interesting",
+      "make failure the goal","make success inconvenient","make it impossible to win",
+      "make everyone win","make it collaborative but competitive","make it work alone",
+      "make it require two people","make it require a crowd","make it anonymous",
+      "make it deeply personal","make it completely impersonal","make it public",
+      "make it private","make it ceremonial","make it bureaucratic",
+      "make it feel ancient","make it feel prehistoric","make it feel medieval",
+      "make it feel like the 1950s","make it feel like the 1980s","make it feel like the 1990s",
+      "make it feel like 2012","make it feel like 2050","make it feel like a forgotten website",
+      "make it feel handmade","make it feel mass-produced","make it feel expensive",
+      "make it feel suspiciously cheap","make it look official","make it look homemade",
+      "make it ugly on purpose","make it beautiful on purpose","make it aggressively practical",
+      "make it completely impractical","make it solve the wrong problem",
+      "make it create a new problem","make it over-engineered","make it under-engineered",
+      "remove the obvious solution","use the obvious solution in a weird way",
+      "make the simplest possible version","make the most elaborate possible version",
+      "make it work in five minutes","make it take a year","make it repeatable",
+      "make it happen only once","make it into a daily habit","make it into a once-a-year event",
+      "make it a rite of passage","make it a secret society","make it a public spectacle",
+      "make it educational without feeling educational","make it educational in the most boring way possible",
+      "make it entertaining without being useful","make it useful without being fun",
+      "make it fun for a completely stupid reason","make it nostalgic",
+      "make it futuristic but low-tech","make it high-tech but feel handmade",
+      "make it analog","make it digital","make it offline","make it work with no electricity",
+      "make it work with one button","make it require twenty buttons","make it voice-controlled",
+      "make it entirely text-based","make it visual","make it tactile","make it edible",
+      "make it portable","make it enormous","make it tiny","make it modular",
+      "make it customizable","make it impossible to customize","make it personalized",
+      "make it random","make it deterministic","make it based on a countdown",
+      "make it based on a ranking","make it based on a lottery","make it based on memory",
+      "make it based on luck","make it based on skill","make it based on arguing",
+      "make it based on storytelling","make it based on observation","make it based on confession",
+      "make people trade something","make people collect something","make people destroy something",
+      "make people name something","make people choose between two bad options",
+      "make people wait","make people hurry","make people return tomorrow",
+      "make people bring something from home","make people lie","make people tell the truth",
+      "make people teach each other","make people misunderstand each other",
+      "make the audience participate","make the creator participate",
+      "make it about a very mundane problem","make it about an impossible problem",
+      "make it solve a problem nobody has","make it create a problem nobody expected",
+      "make it slightly cursed","make it wholesome","make it unsettling",
+      "make it sentimental","make it emotionally neutral","make it ridiculous",
+      "make it completely sincere","make it deadpan","make it melodramatic",
+      "make it bureaucratically cheerful","make it aggressively polite",
+      "make it passive-aggressive","make it extremely earnest","make it suspiciously confident",
+      "make it deliberately boring","make it surprisingly exciting",
+      "make it feel like a scam (it isn't)","make it feel like a government program",
+      "make it feel like a cult (it isn't)","make it feel like a children's toy",
+      "make it feel like a corporate training exercise","make it feel like a conspiracy",
+      "make it feel like a local tradition","make it feel like an urban legend",
+      "make it feel like someone invented it by accident","make it feel like it has existed forever",
+      "make it so obvious nobody notices it","make it so strange people can't stop talking about it",
+      "make it deliberately derivative","make it inspired by something completely unrelated",
+      "combine two incompatible assumptions","take the premise literally",
+      "take the metaphor literally","take the name literally","remove one important assumption",
+      "add one unnecessary rule","add ten unnecessary rules","make the interface lie",
+      "make the instructions misleading","make the instructions excessively detailed",
+      "make the instructions extremely vague","make the user discover the purpose",
+      "make the purpose obvious","start with the ending","work backwards",
+      "make the prototype in one hour","make it without writing code",
+      "make it with only one material","make it with whatever is already nearby",
+      "make it cost nothing","make it cost exactly one dollar",
+      "make it something you'd give as a gift","make it something you'd be embarrassed to sell",
+      "make it something you'd want to use yourself","make it something you'd never personally use",
+      "make it for a very specific fictional person","make it for a fictional civilization",
+      "make it for an alien","make it for a ghost","make it for a robot",
+      "make it for someone from 100 years ago","make it for someone 100 years from now"
+    ]
+  };
+
+  const CATS = ["topic", "method", "direction"];
+  const LS_KEYS = {
+    custom: c => `csg_custom_${c}`,
+    hidden: c => `csg_hidden_${c}`,
+    current: "csg_current",
+    history: "csg_history",
+    pinned: "csg_pinned"
+  };
+
+  /* ============================================================
+     STATE
+     ============================================================ */
+  function loadArr(key){
+    try{ const v = JSON.parse(localStorage.getItem(key)); return Array.isArray(v) ? v : []; }
+    catch(e){ return []; }
+  }
+  function saveArr(key, arr){
+    try{ localStorage.setItem(key, JSON.stringify(arr)); } catch(e){}
+  }
+
+  const state = {
+    custom: {},
+    hidden: {},
+    pinned: {},
+    current: null,   // { topic, method, direction }
+    history: loadArr(LS_KEYS.history)
+  };
+  CATS.forEach(c => {
+    state.custom[c] = loadArr(LS_KEYS.custom(c));
+    state.hidden[c] = loadArr(LS_KEYS.hidden(c));
+  });
+  {
+    try{
+      const savedPinned = JSON.parse(localStorage.getItem(LS_KEYS.pinned));
+      state.pinned = (savedPinned && typeof savedPinned === 'object') ? savedPinned : {};
+    } catch(e){ state.pinned = {}; }
+    CATS.forEach(c => { if (typeof state.pinned[c] !== 'boolean') state.pinned[c] = false; });
+  }
+
+  function savePinned(){
+    try{ localStorage.setItem(LS_KEYS.pinned, JSON.stringify(state.pinned)); } catch(e){}
+  }
+  {
+    const savedCurrent = localStorage.getItem(LS_KEYS.current);
+    if (savedCurrent){
+      try{ state.current = JSON.parse(savedCurrent); } catch(e){ state.current = null; }
+    }
+  }
+
+  function activeList(cat){
+    const hidden = new Set(state.hidden[cat]);
+    return DATA[cat].filter(x => !hidden.has(x)).concat(state.custom[cat]);
+  }
+
+  function pickRandom(cat, avoid){
+    const list = activeList(cat);
+    if (list.length === 0) return "(add something to this list)";
+    if (list.length === 1) return list[0];
+    let choice;
+    do { choice = list[Math.floor(Math.random() * list.length)]; }
+    while (choice === avoid);
+    return choice;
+  }
+
+  /* ============================================================
+     RENDER
+     ============================================================ */
+  const elMain = document.getElementById('btn-main');
+  const elRerollAll = document.getElementById('btn-reroll-all');
+
+  function renderPrompt(animateCats){
+    CATS.forEach(cat => {
+      const valueEl = document.getElementById('value-' + cat);
+      const cardEl = document.getElementById('card-' + cat);
+      const rerollBtn = document.getElementById('reroll-' + cat);
+      const pinBtn = document.getElementById('pin-' + cat);
+      const val = state.current ? state.current[cat] : null;
+      const isPinned = !!state.pinned[cat];
+
+      if (val){
+        valueEl.textContent = val;
+        valueEl.classList.remove('placeholder');
+        rerollBtn.disabled = isPinned;
+        pinBtn.disabled = false;
+      } else {
+        valueEl.textContent = "???";
+        valueEl.classList.add('placeholder');
+        rerollBtn.disabled = true;
+        pinBtn.disabled = true;
+      }
+
+      pinBtn.classList.toggle('active', isPinned);
+      cardEl.classList.toggle('pinned', isPinned);
+
+      if (animateCats && animateCats.includes(cat)){
+        cardEl.classList.remove('flipping');
+        void cardEl.offsetWidth; // reflow to restart animation
+        cardEl.classList.add('flipping');
+      }
+    });
+
+    if (state.current){
+      elMain.style.display = 'none';
+      elRerollAll.style.display = 'inline-block';
+      const allPinned = CATS.every(c => state.pinned[c]);
+      elRerollAll.disabled = allPinned;
+      elRerollAll.title = allPinned ? 'Unpin a card first' : '';
+    } else {
+      elMain.style.display = 'inline-block';
+      elRerollAll.style.display = 'none';
+    }
+  }
+
+  function persistCurrent(){
+    if (state.current) localStorage.setItem(LS_KEYS.current, JSON.stringify(state.current));
+  }
+
+  function pushHistory(){
+    if (!state.current) return;
+    const last = state.history[0];
+    if (last && last.topic === state.current.topic && last.method === state.current.method && last.direction === state.current.direction){
+      return; // don't duplicate identical consecutive entries
+    }
+    state.history.unshift(Object.assign({}, state.current, { ts: Date.now() }));
+    if (state.history.length > 100) state.history.length = 100;
+    saveArr(LS_KEYS.history, state.history);
+    renderHistory();
+  }
+
+  function renderHistory(){
+    const list = document.getElementById('history-list');
+    if (state.history.length === 0){
+      list.innerHTML = '<li class="history-empty">Nothing yet. Your combinations will show up here.</li>';
+      return;
+    }
+    list.innerHTML = '';
+    state.history.forEach((item, idx) => {
+      const li = document.createElement('li');
+      li.className = 'history-item';
+      li.innerHTML = `<span class="combo"><b>${escapeHtml(item.topic)}</b> + ${escapeHtml(item.method)} + ${escapeHtml(item.direction)}</span>`;
+      li.addEventListener('click', () => {
+        state.current = { topic: item.topic, method: item.method, direction: item.direction };
+        persistCurrent();
+        renderPrompt(CATS);
+      });
+      list.appendChild(li);
+    });
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  /* ============================================================
+     ACTIONS
+     ============================================================ */
+  function rerollAll(){
+    const isFirstRoll = !state.current;
+    const next = {};
+    const changed = [];
+    CATS.forEach(cat => {
+      const prevVal = state.current ? state.current[cat] : null;
+      if (!isFirstRoll && state.pinned[cat]){
+        next[cat] = prevVal; // preserve pinned card untouched
+      } else {
+        next[cat] = pickRandom(cat, prevVal);
+        changed.push(cat);
+      }
+    });
+    state.current = next;
+    persistCurrent();
+    renderPrompt(changed);
+    pushHistory();
+  }
+
+  function rerollOne(cat){
+    if (!state.current) return;
+    const prev = state.current[cat];
+    state.current[cat] = pickRandom(cat, prev);
+    persistCurrent();
+    renderPrompt([cat]);
+    pushHistory();
+  }
+
+  elMain.addEventListener('click', rerollAll);
+  elRerollAll.addEventListener('click', rerollAll);
+  CATS.forEach(cat => {
+    document.getElementById('reroll-' + cat).addEventListener('click', () => rerollOne(cat));
+    document.getElementById('pin-' + cat).addEventListener('click', () => {
+      state.pinned[cat] = !state.pinned[cat];
+      savePinned();
+      renderPrompt();
+    });
+  });
+
+  /* ============================================================
+     CUSTOMIZE PANEL
+     ============================================================ */
+  const catLabels = { topic: "Topic", method: "Method", direction: "Direction" };
+
+  function buildCustomizeUI(){
+    const container = document.getElementById('cat-columns');
+    container.innerHTML = '';
+    CATS.forEach(cat => {
+      const col = document.createElement('div');
+      col.className = 'cat-col';
+      col.innerHTML = `
+        <h4>${catLabels[cat]}</h4>
+        <div class="add-row">
+          <input type="text" placeholder="Add your own..." data-cat="${cat}" class="add-input">
+          <button class="add-btn" data-cat="${cat}">+</button>
+        </div>
+        <div class="chip-list" id="chips-${cat}"></div>
+        <details>
+          <summary style="font-size:11px;padding:8px 0;">Built-in list (${DATA[cat].length})</summary>
+          <div class="panel-body" style="padding:8px 0 0;">
+            <div class="builtin-list" id="builtin-${cat}"></div>
+            <div class="reset-row">
+              <button class="reset-builtin" data-cat="${cat}">reset built-ins</button>
+              <button class="clear-custom" data-cat="${cat}">clear custom</button>
+            </div>
+          </div>
+        </details>
+      `;
+      container.appendChild(col);
+    });
+
+    container.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => addCustom(btn.dataset.cat));
+    });
+    container.querySelectorAll('.add-input').forEach(inp => {
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') addCustom(inp.dataset.cat);
+      });
+    });
+    container.querySelectorAll('.reset-builtin').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.hidden[btn.dataset.cat] = [];
+        saveArr(LS_KEYS.hidden(btn.dataset.cat), []);
+        renderBuiltinList(btn.dataset.cat);
+      });
+    });
+    container.querySelectorAll('.clear-custom').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.custom[btn.dataset.cat] = [];
+        saveArr(LS_KEYS.custom(btn.dataset.cat), []);
+        renderChips(btn.dataset.cat);
+      });
+    });
+
+    CATS.forEach(cat => { renderChips(cat); renderBuiltinList(cat); });
+  }
+
+  function addCustom(cat){
+    const input = document.querySelector(`.add-input[data-cat="${cat}"]`);
+    const val = input.value.trim();
+    if (!val) return;
+    if (state.custom[cat].includes(val)) { input.value=''; return; }
+    state.custom[cat].push(val);
+    saveArr(LS_KEYS.custom(cat), state.custom[cat]);
+    input.value = '';
+    renderChips(cat);
+  }
+
+  function renderChips(cat){
+    const holder = document.getElementById('chips-' + cat);
+    if (state.custom[cat].length === 0){
+      holder.innerHTML = '<span class="chip-empty">no custom items yet</span>';
+      return;
+    }
+    holder.innerHTML = '';
+    state.custom[cat].forEach(val => {
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.innerHTML = `${escapeHtml(val)} <button aria-label="remove">&times;</button>`;
+      chip.querySelector('button').addEventListener('click', () => {
+        state.custom[cat] = state.custom[cat].filter(v => v !== val);
+        saveArr(LS_KEYS.custom(cat), state.custom[cat]);
+        renderChips(cat);
+      });
+      holder.appendChild(chip);
+    });
+  }
+
+  function renderBuiltinList(cat){
+    const holder = document.getElementById('builtin-' + cat);
+    const hidden = new Set(state.hidden[cat]);
+    holder.innerHTML = '';
+    DATA[cat].forEach(val => {
+      const id = `bi-${cat}-${val.replace(/\W+/g,'_')}`;
+      const label = document.createElement('label');
+      label.innerHTML = `<input type="checkbox" id="${id}" ${hidden.has(val) ? '' : 'checked'}> ${escapeHtml(val)}`;
+      label.querySelector('input').addEventListener('change', e => {
+        if (e.target.checked){
+          state.hidden[cat] = state.hidden[cat].filter(v => v !== val);
+        } else {
+          if (!state.hidden[cat].includes(val)) state.hidden[cat].push(val);
+        }
+        saveArr(LS_KEYS.hidden(cat), state.hidden[cat]);
+      });
+      holder.appendChild(label);
+    });
+  }
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  buildCustomizeUI();
+  renderHistory();
+  renderPrompt();
+
+})();
+</script>
+
+</body>
+</html>

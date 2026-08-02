@@ -1,0 +1,322 @@
+/* ============================================================
+   THE INVENTOR'S LAB — shared tokens & components
+   Same visual language as the generator page (give-me-something-to-make.html)
+   ============================================================ */
+:root{
+  --ink: #14162B;
+  --ink-soft: #2A2D4A;
+  --paper: #FFF8E7;
+  --paper-line: #E7DCC0;
+  --topic: #FF6B5B;
+  --topic-ink: #5C1A10;
+  --method: #2EC4B6;
+  --method-ink: #063632;
+  --direction: #FFC145;
+  --direction-ink: #4A3200;
+  --pin: #F5F1E6;
+  --shadow: rgba(20,22,43,0.45);
+  --radius: 14px;
+  --font-display: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin:0; padding:0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+body{
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255,107,91,0.10), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(46,196,182,0.10), transparent 40%);
+}
+
+a{ color: inherit; }
+
+.wrap{
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 18px 80px;
+}
+
+/* ============================================================
+   NAV — a strip, not a header. Reads like a label on the bench.
+   ============================================================ */
+.labnav{
+  border-bottom: 1px solid var(--ink-soft);
+  margin-bottom: 40px;
+}
+.labnav-inner{
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 18px 18px;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.labnav-mark{
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.labnav-mark span{ color: var(--direction); }
+.labnav-links{
+  display:flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.labnav-links a{
+  text-decoration:none;
+  color: var(--paper);
+  opacity: 0.65;
+  padding-bottom: 3px;
+  border-bottom: 1px solid transparent;
+  transition: opacity 0.12s ease, border-color 0.12s ease;
+}
+.labnav-links a:hover{ opacity: 1; }
+.labnav-links a.current{
+  opacity: 1;
+  border-bottom-color: var(--direction);
+}
+.labnav-links a.ext::after{ content: " ↗"; opacity: 0.6; }
+
+/* ============================================================
+   TYPE
+   ============================================================ */
+.eyebrow{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--paper-line);
+  opacity: 0.7;
+  margin: 0 0 10px;
+}
+h1.lab-title{
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(30px, 6vw, 52px);
+  letter-spacing: -0.5px;
+  margin: 0 0 8px;
+  line-height: 1.02;
+}
+h1.lab-title span{
+  display:inline-block;
+  transform: rotate(-2deg);
+  color: var(--direction);
+}
+.tagline{
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin: 0 0 26px;
+}
+h2.section-title{
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(22px, 4vw, 30px);
+  letter-spacing: -0.3px;
+  margin: 0 0 6px;
+}
+.section-sub{
+  font-family: var(--font-body);
+  opacity: 0.7;
+  margin: 0 0 28px;
+  max-width: 56ch;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary{
+  display:inline-block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--direction);
+  color: var(--direction-ink);
+  border: none;
+  padding: 16px 34px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration:none;
+  box-shadow: 0 6px 0 #b8871f, 0 10px 18px rgba(0,0,0,0.35);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-primary:hover{ transform: translateY(-2px); }
+.btn-primary:active{ transform: translateY(2px); box-shadow: 0 3px 0 #b8871f; }
+
+.btn-secondary{
+  display:inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--paper);
+  border: 1px solid var(--ink-soft);
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-secondary:hover{ background: var(--ink-soft); }
+
+/* ============================================================
+   TICKET CARD — the signature element.
+   Same grammar as the generator's card: pinned, tilted, torn edge.
+   Reused everywhere: an idea, a build, a section of the Lab.
+   ============================================================ */
+.ticket{
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 26px 20px 20px;
+  box-shadow: 0 14px 0 -6px var(--shadow), 0 18px 24px -10px var(--shadow);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.15s ease;
+  text-decoration: none;
+  display:block;
+}
+.ticket:hover{ transform: rotate(var(--tilt, 0deg)) translateY(-3px); }
+.ticket::before{
+  content: "";
+  position:absolute;
+  top: 46px; left: 14px; right: 14px;
+  height: 1px;
+  background-image: repeating-linear-gradient(to right, var(--paper-line) 0 6px, transparent 6px 12px);
+}
+.ticket .pin{
+  position:absolute;
+  top: -9px; left: 24px;
+  transform: rotate(8deg);
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--pin);
+  box-shadow: inset 0 -2px 3px rgba(0,0,0,0.25), 0 3px 4px rgba(0,0,0,0.4);
+}
+.ticket-label{
+  display:inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+.ticket-label.topic{ background: var(--topic); color: var(--topic-ink); }
+.ticket-label.method{ background: var(--method); color: var(--method-ink); }
+.ticket-label.direction{ background: var(--direction); color: var(--direction-ink); }
+
+.ticket-title{
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 19px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+.ticket-body{
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.85;
+  margin: 0;
+}
+.ticket-combo{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  opacity: 0.55;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+.ticket-combo .sep{ opacity: 0.4; padding: 0 4px; }
+
+.board{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 26px 22px;
+  margin-bottom: 10px;
+}
+.board .ticket:nth-child(3n+1){ --tilt: -1.5deg; }
+.board .ticket:nth-child(3n+2){ --tilt: 1deg; }
+.board .ticket:nth-child(3n)  { --tilt: -0.5deg; }
+
+/* placeholder / coming-soon state */
+.ticket.placeholder{
+  background: transparent;
+  border: 1.5px dashed var(--ink-soft);
+  color: var(--paper);
+  box-shadow: none;
+}
+.ticket.placeholder::before{ display:none; }
+.ticket.placeholder .pin{ display:none; }
+.ticket.placeholder .ticket-title{ color: var(--paper); opacity: 0.8; }
+.ticket.placeholder .ticket-body{ color: var(--paper); opacity: 0.55; }
+
+/* ============================================================
+   HOMEPAGE HERO
+   ============================================================ */
+.hero{
+  padding: 20px 0 50px;
+  text-align: center;
+}
+.hero .eyebrow{ }
+.hero-copy{
+  max-width: 46ch;
+  margin: 0 auto 30px;
+  font-size: 15px;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+.hero-copy strong{ color: var(--direction); font-weight: 700; }
+
+.hero-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 10px;
+}
+.hero-note{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  opacity: 0.4;
+  margin-top: 6px;
+}
+
+section{ margin-bottom: 56px; }
+
+footer.labfoot{
+  text-align:center;
+  font-size: 11px;
+  opacity: 0.35;
+  font-family: var(--font-mono);
+  margin-top: 40px;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 560px){
+  .labnav-inner{ flex-direction: column; align-items:flex-start; }
+}

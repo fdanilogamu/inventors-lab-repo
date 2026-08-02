@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workbench — The Inventor's Lab</title>
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<nav class="labnav">
+  <div class="labnav-inner">
+    <a class="labnav-mark" href="index.html">THE INVENTOR'S <span>LAB</span></a>
+    <div class="labnav-links">
+      <a href="index.html">Lab</a>
+      <a href="workbench.html" class="current">Workbench</a>
+      <a href="builders-corner.html">Builder's Corner</a>
+      <a href="https://your-substack-url.substack.com" class="ext" target="_blank" rel="noopener">Lab Notes</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">things we thought of</p>
+    <h2 class="section-title">The Workbench</h2>
+    <p class="section-sub">Combinations from the generator that sparked something, pinned up before they're forgotten. Nothing here is a commitment — it's just left out to ferment.</p>
+
+    <div class="board" id="workbench-board"><!-- filled by JS --></div>
+  </section>
+
+  <footer class="labfoot">the inventor's lab &middot; useless bullshit for all</footer>
+
+</div>
+
+<script src="assets/data/workbench.js"></script>
+<script>
+(function(){
+  const board = document.getElementById('workbench-board');
+  if (!WORKBENCH || WORKBENCH.length === 0){
+    board.innerHTML = '<p style="opacity:0.5;font-family:var(--font-mono);font-size:13px;">Nothing pinned up yet.</p>';
+    return;
+  }
+  board.innerHTML = WORKBENCH.map(item => `
+    <div class="ticket">
+      <div class="pin"></div>
+      <p class="ticket-combo">${item.topic}<span class="sep">+</span>${item.method}<span class="sep">+</span>${item.direction}</p>
+      <h3 class="ticket-title">${item.sparked}</h3>
+      <p class="ticket-body">${item.details}</p>
+    </div>
+  `).join('');
+})();
+</script>
+
+</body>
+</html>
