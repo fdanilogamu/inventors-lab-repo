@@ -26,7 +26,7 @@ const WORKBENCH = [
     direction: "Make it passive-aggressive",
     sparked: "Pissy Password Bot",
     details: "A password-strength checker that is never in the mood to help you with your passwords."
-    // placeholder combo — replace with the real topic/method/direction
+   
   },
   {
     topic: "Waiting rooms",
@@ -34,6 +34,12 @@ const WORKBENCH = [
     direction: "Make it competitive",
     sparked: "Gamified Triage",
     details: "Turns the hospital waiting room into a leaderboard. It has points, ranks, and a scoreboard for who gets seen next and why."
-    // placeholder combo — replace with the real topic/method/direction
+  },
+  {
+    topic: "Shady email",
+    method: "Gamification",
+    direction: "make it feel ancient",
+    sparked: "Good Luck Ramses",
+    details: "Historical phishing game; branching narrative + state system."
   }
 ];
