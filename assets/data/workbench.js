@@ -40,7 +40,7 @@ const WORKBENCH = [
     method: "Gamification",
     direction: "make it feel ancient",
     sparked: "Good Luck Ramses",
-    details: "Historical phishing game; branching narrative + state system."
+    details: "Historical phishing game; branching narrative + state system. Ramses III is stuck in the present, emailing you like a Nigerian prince."
   }
-  
+
 ];
