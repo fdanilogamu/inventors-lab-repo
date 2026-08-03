@@ -25,7 +25,7 @@ const WORKBENCH = [
     method: "Chatbot",
     direction: "Make it passive-aggressive",
     sparked: "Pissy Password Bot",
-    details: "A password-strength checker that is never in the mood to help you with your passwords."
+    details: "A password-strength checker that is never in the mood to help you with your passwords. You ask for a password and it's like 'you forgot again?'"
    
   },
   {
