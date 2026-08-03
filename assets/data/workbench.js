@@ -33,7 +33,7 @@ const WORKBENCH = [
     method: "Video game",
     direction: "Make it competitive",
     sparked: "Gamified Triage",
-    details: "Turns the hospital waiting room into a leaderboard. It has points, ranks, and a scoreboard for who gets seen next and why."
+    details: "Turns the hospital waiting room into a leaderboard. It has points, ranks, and a scoreboard for who gets seen next and why. Starting the game is the same as 'checking in' for the appointment. Timing is set up so that you finish the game by the time you get called."
   },
   {
     topic: "Shady email",
