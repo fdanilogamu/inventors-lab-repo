@@ -988,7 +988,7 @@
       if (!isFirstRoll && state.pinned[cat]){
         next[cat] = prevVal; // preserve pinned card untouched
       } else {
-        next[cat] = pickRandom(cat, prevVal);
+        next[cat] = getNextFromPool(cat, prevVal);
         changed.push(cat);
       }
     });
@@ -1001,7 +1001,7 @@
   function rerollOne(cat){
     if (!state.current) return;
     const prev = state.current[cat];
-    state.current[cat] = pickRandom(cat, prev);
+    state.current[cat] = getNextFromPool(cat, prev);
     persistCurrent();
     renderPrompt([cat]);
     pushHistory();
@@ -1062,6 +1062,8 @@
       btn.addEventListener('click', () => {
         state.hidden[btn.dataset.cat] = [];
         saveArr(LS_KEYS.hidden(btn.dataset.cat), []);
+        state.pools[btn.dataset.cat] = refillPool(btn.dataset.cat, state.current ? state.current[btn.dataset.cat] : null);
+        saveArr(LS_KEYS.pool(btn.dataset.cat), state.pools[btn.dataset.cat]);
         renderBuiltinList(btn.dataset.cat);
       });
     });
@@ -1069,6 +1071,8 @@
       btn.addEventListener('click', () => {
         state.custom[btn.dataset.cat] = [];
         saveArr(LS_KEYS.custom(btn.dataset.cat), []);
+        state.pools[btn.dataset.cat] = refillPool(btn.dataset.cat, state.current ? state.current[btn.dataset.cat] : null);
+        saveArr(LS_KEYS.pool(btn.dataset.cat), state.pools[btn.dataset.cat]);
         renderChips(btn.dataset.cat);
       });
     });
@@ -1083,6 +1087,9 @@
     if (state.custom[cat].includes(val)) { input.value=''; return; }
     state.custom[cat].push(val);
     saveArr(LS_KEYS.custom(cat), state.custom[cat]);
+    // reset pool on custom addition so new item gets included in rotation
+    state.pools[cat] = refillPool(cat, state.current ? state.current[cat] : null);
+    saveArr(LS_KEYS.pool(cat), state.pools[cat]);
     input.value = '';
     renderChips(cat);
   }
@@ -1101,6 +1108,8 @@
       chip.querySelector('button').addEventListener('click', () => {
         state.custom[cat] = state.custom[cat].filter(v => v !== val);
         saveArr(LS_KEYS.custom(cat), state.custom[cat]);
+        state.pools[cat] = refillPool(cat, state.current ? state.current[cat] : null);
+        saveArr(LS_KEYS.pool(cat), state.pools[cat]);
         renderChips(cat);
       });
       holder.appendChild(chip);
@@ -1122,6 +1131,8 @@
           if (!state.hidden[cat].includes(val)) state.hidden[cat].push(val);
         }
         saveArr(LS_KEYS.hidden(cat), state.hidden[cat]);
+        state.pools[cat] = refillPool(cat, state.current ? state.current[cat] : null);
+        saveArr(LS_KEYS.pool(cat), state.pools[cat]);
       });
       holder.appendChild(label);
     });
