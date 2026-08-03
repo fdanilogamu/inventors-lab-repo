@@ -18,7 +18,7 @@ const WORKBENCH = [
     method: "Budgeting tool",
     direction: "Complete beginners",
     sparked: "Generational Wealth",
-    details: "A budgeting tool where the selected generation changes the aesthetic and cultural framing of the whole experience."
+    details: "A beginner-friendly budgeting tool where the user first selects their generation. The selector changes both the visual aesthetic and the cultural framing of the experience. Millennials get a nostalgic 90s vibe, Gen Z gets early-2010s nostalgia, etc. The tool leans into generational stereotypes and references as part of the interface, including deliberately ridiculous “psychic damage” moments for older users. The joke is that a supposedly practical budgeting tool becomes aware of who is using it."
   },
   {
     topic: "Passwords",
