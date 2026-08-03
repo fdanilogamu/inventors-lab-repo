@@ -11,7 +11,7 @@ const WORKBENCH = [
     method: "Journal",
     direction: "Secret society",
     sparked: "Procrastination Station",
-    details: "A social journal/forum where people cheer on each other's procrastination...a Wall of Shame for recently completed tasks, and a Wall of Fame for the greatest procrastinators."
+    details: "A social journal/forum where people cheer on each other's procrastination...a Wall of Shame for recently completed tasks, and a Wall of Fame for the greatest procrastinators. Instead of upvotes and downvotes, it has things like 'I haven't done this yet either!'"
   },
   {
     topic: "Nostalgia",
