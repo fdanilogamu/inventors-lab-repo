@@ -48,6 +48,13 @@ const WORKBENCH = [
     direction: "Make it feel like an urban legend",
     sparked: "The Masked Tuk-Tuk Driver",
     details: "A masked tuk-tuk driver provides free trips to and from work for neighborhood residents. A sign-up sheet at the local grocery store periodically refreshes once all slots are filled, but no one sees who changes it. At the scheduled time, the driver simply appears in silence, takes you to work, and never asks where you work. No fare, no pleasantries."
+  },
+  {
+    topic: "Things people pretend to understand",
+    method: "Dating App",
+    direction: "Make success inconvenient",
+    sparked: "Research Partners",
+    details: "The app forces matches to open the conversation with a specific topic (AI-moderated). The topics must be things with widespread opinion but not expertise. If the matches meet up, they owe the app a report on the subject"
   }
 
 ];
