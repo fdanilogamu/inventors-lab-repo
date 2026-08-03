@@ -777,11 +777,12 @@
     hidden: c => `csg_hidden_${c}`,
     current: "csg_current",
     history: "csg_history",
-    pinned: "csg_pinned"
+    pinned: "csg_pinned",
+    pool: c => `csg_pool_${c}`
   };
 
   /* ============================================================
-     STATE
+     STATE & SHUFFLE / QUEUE MANAGEMENT
      ============================================================ */
   function loadArr(key){
     try{ const v = JSON.parse(localStorage.getItem(key)); return Array.isArray(v) ? v : []; }
@@ -791,28 +792,43 @@
     try{ localStorage.setItem(key, JSON.stringify(arr)); } catch(e){}
   }
 
+  // Fisher-Yates shuffle helper
+  function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
   const state = {
     custom: {},
     hidden: {},
     pinned: {},
+    pools: {},       // Shuffled queues per category to cycle through lists without repeats
     current: null,   // { topic, method, direction }
     history: loadArr(LS_KEYS.history)
   };
-  CATS.forEach(c => {
-    state.custom[c] = loadArr(LS_KEYS.custom(c));
-    state.hidden[c] = loadArr(LS_KEYS.hidden(c));
+
+  CATS.forEach(cat => {
+    state.custom[cat] = loadArr(LS_KEYS.custom(cat));
+    state.hidden[cat] = loadArr(LS_KEYS.hidden(cat));
+    state.pools[cat] = loadArr(LS_KEYS.pool(cat));
   });
+
   {
     try{
       const savedPinned = JSON.parse(localStorage.getItem(LS_KEYS.pinned));
       state.pinned = (savedPinned && typeof savedPinned === 'object') ? savedPinned : {};
     } catch(e){ state.pinned = {}; }
-    CATS.forEach(c => { if (typeof state.pinned[c] !== 'boolean') state.pinned[c] = false; });
+    CATS.forEach(cat => { if (typeof state.pinned[cat] !== 'boolean') state.pinned[cat] = false; });
   }
 
   function savePinned(){
     try{ localStorage.setItem(LS_KEYS.pinned, JSON.stringify(state.pinned)); } catch(e){}
   }
+
   {
     const savedCurrent = localStorage.getItem(LS_KEYS.current);
     if (savedCurrent){
@@ -825,13 +841,47 @@
     return DATA[cat].filter(x => !hidden.has(x)).concat(state.custom[cat]);
   }
 
-  function pickRandom(cat, avoid){
+  // Refill and shuffle pool if empty or if list contents changed significantly
+  function refillPool(cat, avoid){
+    const list = activeList(cat);
+    if (list.length === 0) return [];
+    let shuffled = shuffleArray(list);
+    // If the first item matches avoid (e.g. current item) and we have more than 1 item, rotate it
+    if (avoid && shuffled.length > 1 && shuffled[0] === avoid) {
+      const temp = shuffled[0];
+      shuffled[0] = shuffled[1];
+      shuffled[1] = temp;
+    }
+    return shuffled;
+  }
+
+  function getNextFromPool(cat, avoid){
     const list = activeList(cat);
     if (list.length === 0) return "(add something to this list)";
     if (list.length === 1) return list[0];
-    let choice;
-    do { choice = list[Math.floor(Math.random() * list.length)]; }
-    while (choice === avoid);
+
+    // Check if pool is valid and populated
+    if (!Array.isArray(state.pools[cat]) || state.pools[cat].length === 0){
+      state.pools[cat] = refillPool(cat, avoid);
+    }
+
+    // Filter pool against active list elements in case list was customized
+    const activeSet = new Set(list);
+    state.pools[cat] = state.pools[cat].filter(x => activeSet.has(x));
+
+    if (state.pools[cat].length === 0){
+      state.pools[cat] = refillPool(cat, avoid);
+    }
+
+    let choice = state.pools[cat].shift();
+    // Prevent immediate back-to-back duplicate if pool only had 1 item or quirk occurred
+    if (choice === avoid && list.length > 1){
+      // Put choice back and reshuffle or pick next
+      state.pools[cat].push(choice);
+      choice = state.pools[cat].shift();
+    }
+
+    saveArr(LS_KEYS.pool(cat), state.pools[cat]);
     return choice;
   }
 
